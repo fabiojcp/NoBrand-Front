@@ -1,0 +1,14 @@
+@font-face {
+  font-family: LogoFont;
+  src: url(../assets/fonts/BetterTogetherScript.ttf);
+}
+
+body {
+  margin: 0;
+  font-family: Archivo;
+  font-weight: 800;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-image: linear-gradient(to right, #e7e7e6, #fffced);
+  color: #000000;
+}
