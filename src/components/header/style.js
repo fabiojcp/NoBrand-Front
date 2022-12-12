@@ -34,6 +34,16 @@ export const Anchor = styled.a`
   }
 `;
 
+export const Greetings = styled.a`
+  font-weight: 500;
+
+  :hover {
+    cursor: default;
+    text-shadow: 1px 1px 2px rgba(100, 100, 111, 0.8);
+    transition: text-shadow 0.3s;
+  }
+`;
+
 export const HeaderSearchBar = styled.form`
   display: flex;
   flex-direction: row;
@@ -109,6 +119,7 @@ export const DropDownLogin = styled.form`
   gap: 2vh;
   transform: scale(0);
   border-radius: 10px;
+  z-index: 5;
 `;
 
 export const DropDownLoginInput = styled.input`
@@ -161,6 +172,24 @@ export const DropDownLoginButton = styled.button`
   }
 `;
 
+export const DropDownRegister = styled.form`
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #ffff;
+  box-shadow: rgba(100, 100, 111, 0.6) 0px 7px 40px 0px;
+  width: 15vw;
+  padding: 2.5vh 1.5vw;
+  margin: 0 0 0 -7vw;
+  gap: 2vh;
+  transform: scale(0);
+  border-radius: 10px;
+  z-index: 5;
+`;
+
+
 export const ErrorSpan = styled.span`
   color: #00000060;
 `;
@@ -181,6 +210,7 @@ export const DropDownContact = styled.div`
   cursor: auto;
   color: #00000040;
   cursor: pointer;
+  z-index: 5;
 
   :first-child :hover {
     color: #00000080;

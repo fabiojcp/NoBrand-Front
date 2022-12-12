@@ -7,7 +7,9 @@ import {
   DropDownLogin,
   DropDownLoginButton,
   DropDownLoginInput,
+  DropDownRegister,
   ErrorSpan,
+  Greetings,
   HeaderSearchBar,
   HeaderSearchButton,
   HeaderSearchInput,
@@ -25,35 +27,60 @@ import {
 } from "react-icons/bs";
 import { motion } from "framer-motion";
 
-import { LoginSchema } from "../../schemas/login";
+import { LoginSchema, RegisterSchema } from "../../schemas/login";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ShopContext } from "../../provider/shop";
+import { StyleContext } from "../../provider/style";
+import { AuthContext } from "../../provider/auth";
 
 export default function Header() {
   const { findProducts } = useContext(ShopContext);
 
-  const [dropDownShow, setDropDownShow] = useState(false);
+  const { isLogged, loginUser, registerUser, userLocal } =
+    useContext(AuthContext);
+
+  const {
+    dropLoginDownShow,
+    setLoginDropDownShow,
+    dropRegisterDownShow,
+    setRegisterDropDownShow,
+    dropDownContactShow,
+    setDropDownContactShow,
+  } = useContext(StyleContext);
 
   const [searchInputValue, setSearchInputValue] = useState("");
-  
+
   function onclickhandler(event, value) {
     event.preventDefault();
-    findProducts(value)
+    findProducts(value);
   }
+
+  const {
+    register: loginRegister,
+    handleSubmit: loginSubmit,
+    formState: { errors: loginErrors },
+  } = useForm({ resolver: yupResolver(LoginSchema) });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(LoginSchema) });
+  } = useForm({ resolver: yupResolver(RegisterSchema) });
 
   const signUp = (data) => {
-    console.log(data);
+    console.log(data, "");
+    registerUser(data);
+    setLoginDropDownShow(false);
+    setRegisterDropDownShow(false);
+    setDropDownContactShow(false);
   };
-
-  const [dropDownContactShow, setDropDownContactShow] = useState(false);
-
+  const signIn = (data) => {
+    loginUser(data);
+    setLoginDropDownShow(false);
+    setRegisterDropDownShow(false);
+    setDropDownContactShow(false);
+  };
   return (
     <>
       <Main>
@@ -73,46 +100,137 @@ export default function Header() {
           <Anchor>
             <BsBag />
           </Anchor>
-          <AnchorLogin
-            onMouseEnter={() => setDropDownShow(true)}
-            onMouseLeave={() => setDropDownShow(false)}
-          >
-            Login
-            {dropDownShow && (
-              <DropDownLogin
-                onSubmit={handleSubmit(signUp)}
-                as={motion.form}
-                initial={{ y: "15px", opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-              >
-                <DropDownLoginInput
-                  type="email"
-                  placeholder="EMAIL"
-                  {...register("email")}
-                />
-                <ErrorSpan>{errors?.email?.message}</ErrorSpan>
-                <DropDownLoginInput
-                  type="password"
-                  placeholder="SENHA"
-                  {...register("password")}
-                />
-                <ErrorSpan>{errors ? errors.password?.message : " "}</ErrorSpan>
-                <DropDownLoginButton
-                  type="submit"
-                  as={motion.button}
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          {isLogged && userLocal.name && (
+            <Greetings>Olá {userLocal?.name}</Greetings>
+          )}
+
+          {isLogged == false && (
+            <>
+              {" "}
+              <div>
+                <AnchorLogin
+                  onMouseEnter={() => {
+                    setLoginDropDownShow(true);
+                    setRegisterDropDownShow(false);
+                    setDropDownContactShow(false);
+                  }}
+                  onMouseLeave={() => setLoginDropDownShow(false)}
                 >
-                  Entrar
-                </DropDownLoginButton>
-              </DropDownLogin>
-            )}
-          </AnchorLogin>
-          <Anchor>Cadastro</Anchor>
+                  Login
+                </AnchorLogin>
+                {dropLoginDownShow && (
+                  <DropDownLogin
+                    onMouseEnter={() => setLoginDropDownShow(true)}
+                    onSubmit={loginSubmit(signIn)}
+                    as={motion.form}
+                    initial={{ y: "15px", opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                  >
+                    <DropDownLoginInput
+                      type="email"
+                      placeholder="EMAIL"
+                      {...loginRegister("loginEmail")}
+                    />
+                    <ErrorSpan>{loginErrors?.loginEmail?.message}</ErrorSpan>
+
+                    <DropDownLoginInput
+                      type="password"
+                      placeholder="SENHA"
+                      {...loginRegister("loginPassword")}
+                    />
+
+                    <ErrorSpan>{loginErrors?.loginPassword?.message}</ErrorSpan>
+
+                    <DropDownLoginButton
+                      type="submit"
+                      as={motion.button}
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.9 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 17,
+                      }}
+                    >
+                      Entrar
+                    </DropDownLoginButton>
+                  </DropDownLogin>
+                )}
+              </div>
+              <div>
+                <Anchor
+                  onMouseEnter={() => {
+                    setLoginDropDownShow(false);
+                    setRegisterDropDownShow(true);
+                    setDropDownContactShow(false);
+                  }}
+                  onMouseLeave={() => setRegisterDropDownShow(false)}
+                >
+                  Cadastro
+                </Anchor>
+                {dropRegisterDownShow && (
+                  <DropDownRegister
+                    onMouseEnter={() => setRegisterDropDownShow(true)}
+                    onSubmit={handleSubmit(signUp)}
+                    as={motion.form}
+                    initial={{ y: "15px", opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                  >
+                    <DropDownLoginInput
+                      type="text"
+                      placeholder="NOME"
+                      {...register("registerName")}
+                    ></DropDownLoginInput>
+
+                    <ErrorSpan>{errors?.registerName?.message}</ErrorSpan>
+
+                    <DropDownLoginInput
+                      type="text"
+                      placeholder="TELEFONE"
+                      {...register("registerPhone")}
+                    ></DropDownLoginInput>
+
+                    <ErrorSpan>{errors?.registerPhone?.message}</ErrorSpan>
+
+                    <DropDownLoginInput
+                      type="email"
+                      placeholder="EMAIL"
+                      {...register("registerEmail")}
+                    ></DropDownLoginInput>
+
+                    <ErrorSpan>{errors?.registerEmail?.message}</ErrorSpan>
+
+                    <DropDownLoginInput
+                      type="password"
+                      placeholder="SENHA"
+                      {...register("registerPassword")}
+                    ></DropDownLoginInput>
+
+                    <ErrorSpan>{errors?.registerPassword?.message}</ErrorSpan>
+
+                    <DropDownLoginButton
+                      type="submit"
+                      as={motion.button}
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.9 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 17,
+                      }}
+                    >
+                      Cadastro
+                    </DropDownLoginButton>
+                  </DropDownRegister>
+                )}
+              </div>
+            </>
+          )}
           <Anchor
             onMouseEnter={() => setDropDownContactShow(true)}
-            onMouseLeave={() => setDropDownContactShow(false)}
+            onMouseLeave={() =>
+              setTimeout(() => setDropDownContactShow(false), 100)
+            }
           >
             Contato{" "}
             {dropDownContactShow && (

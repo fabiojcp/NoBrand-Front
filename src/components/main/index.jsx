@@ -1,5 +1,8 @@
 import { useContext, useEffect, useState } from "react";
+
 import { ShopContext } from "../../provider/shop";
+import { StyleContext } from "../../provider/style";
+
 import ProductCard from "../productCard";
 import {
   Main,
@@ -12,6 +15,12 @@ import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 
 export default function MainBox() {
   const { findProducts, products } = useContext(ShopContext);
+
+  const {
+    setLoginDropDownShow,
+    setRegisterDropDownShow,
+    setDropDownContactShow,
+  } = useContext(StyleContext);
 
   const [dropDownShow, setDropDownShow] = useState(false);
 
@@ -27,10 +36,14 @@ export default function MainBox() {
     findProducts("d86271701707fa44d3208faa82de98544a2737db");
   }, []);
 
-
   return (
     <Main
-      onMouseEnter={() => setDropDownShow(true)}
+      onMouseEnter={() => {
+        setDropDownShow(true);
+        setLoginDropDownShow(false);
+        setRegisterDropDownShow(false);
+        setDropDownContactShow(false);
+      }}
       onMouseLeave={() => setDropDownShow(false)}
       as={motion.div}
       initial={{ y: "15px", opacity: 0 }}
@@ -55,7 +68,11 @@ export default function MainBox() {
           );
         })}
       {dropDownShow && quantity < products.length && (
-        <ChangeItensPlusButton onClick={() => {changeItens("plus");}}>
+        <ChangeItensPlusButton
+          onClick={() => {
+            changeItens("plus");
+          }}
+        >
           {GrFormNext()}
         </ChangeItensPlusButton>
       )}
