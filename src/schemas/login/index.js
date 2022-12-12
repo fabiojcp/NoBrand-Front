@@ -14,3 +14,11 @@ export const RegisterSchema = yup.object().shape({
   registerEmail: yup.string().required("Este campo é obrigatório").email(),
   registerPassword: yup.string().required("Este campo é obrigatório"),
 });
+
+export const RegisterAdmSchema = yup.object().shape({
+  registerName: yup.string().required("Este campo é obrigatório"),
+  registerPhone: yup.string().required("Este campo é obrigatório"),
+  registerEmail: yup.string().required("Este campo é obrigatório").email(),
+  registerPassword: yup.string().required("Este campo é obrigatório"),
+  registerSecretKey : yup.string().required("Este campo é obrigatório")
+});

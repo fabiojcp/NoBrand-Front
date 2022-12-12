@@ -5,6 +5,7 @@ import "./styles/App.css";
 import MainBox from "./components/main/";
 import { StyleProvider } from "./provider/style";
 import { AuthProvider } from "./provider/auth";
+import Router from "./routes";
 
 function App() {
   return (
@@ -13,8 +14,7 @@ function App() {
         <AuthProvider>
           <ShopProvider>
             <StyleProvider>
-              <Header></Header>
-              <MainBox></MainBox>
+              <Router />
             </StyleProvider>
           </ShopProvider>
         </AuthProvider>

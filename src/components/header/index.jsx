@@ -69,14 +69,13 @@ export default function Header() {
   } = useForm({ resolver: yupResolver(RegisterSchema) });
 
   const signUp = (data) => {
-    console.log(data, "");
-    registerUser(data);
+    registerUser(data, "user");
     setLoginDropDownShow(false);
     setRegisterDropDownShow(false);
     setDropDownContactShow(false);
   };
   const signIn = (data) => {
-    loginUser(data);
+    loginUser(data, "user");
     setLoginDropDownShow(false);
     setRegisterDropDownShow(false);
     setDropDownContactShow(false);
